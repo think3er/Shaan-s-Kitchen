@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dish Catalogue - Shaan's Kitchen</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    /* Windows 95/98 Color Palette */
+    :root {
+      --win-bg: #c0c0c0;
+      --win-text: #000000;
+      --win-highlight: #000080;
+      --win-highlight-text: #ffffff;
+      --win-button: #c0c0c0;
+      --win-window: #ffffff;
+      --win-shadow-dark: #808080;
+      --win-shadow-light: #ffffff;
+      --win-desktop: #008080;
+      --win-menu: #c0c0c0;
+    }
+
+    /* Custom scroll bar */
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--win-button);
+      border-left: 1px solid var(--win-shadow-dark);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--win-button);
+      border: 1px solid var(--win-text);
+      border-right: 1px solid var(--win-shadow-light);
+      border-bottom: 1px solid var(--win-shadow-light);
+    }
+
+    body {
+      background-color: var(--win-desktop);
+      font-family: 'MS Sans Serif', 'Microsoft Sans Serif', Tahoma, sans-serif;
+      padding: 2rem;
+      cursor: url('assets/cursor.cur'), auto;
+      color: var(--win-text);
+      margin: 0;
+      overflow-x: hidden;
+      padding-bottom: 40px; /* Space for taskbar */
+    }
+
+    /* Windows titlebar style */
+    .window {
+      border: 2px solid var(--win-text);
+      background-color: var(--win-bg);
+      margin-bottom: 1rem;
+      border-radius: 0;
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light),
+                  2px 2px 5px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .titlebar {
+      background: linear-gradient(90deg, var(--win-highlight) 0%, #0000A0 100%);
+      color: var(--win-highlight-text);
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .titlebar-text {
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+
+    .titlebar-text img {
+      height: 16px;
+      margin-right: 5px;
+    }
+
+    .titlebar-controls {
+      display: flex;
+    }
+
+    .titlebar-button {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      background-color: var(--win-button);
+      border: 1px solid var(--win-shadow-dark);
+      border-top-color: var(--win-shadow-light);
+      border-left-color: var(--win-shadow-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .window-content {
+      padding: 8px;
+      background-color: var(--win-window);
+      border-top: 1px solid var(--win-shadow-dark);
+    }
+
+    /* Navigation styling */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background-color: var(--win-bg);
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--win-shadow-dark);
+    }
+
+    .win-button {
+      text-decoration: none;
+      color: var(--win-text);
+      padding: 6px 12px;
+      background-color: var(--win-button);
+      border: 2px solid var(--win-text);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                 inset 1px 1px var(--win-shadow-light);
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: transform 0.05s;
+    }
+
+    .win-button:hover {
+      background-color: #d4d0c8;
+    }
+
+    .win-button:active {
+      transform: translateY(1px);
+      box-shadow: inset 1px 1px var(--win-shadow-dark),
+                 inset -1px -1px var(--win-shadow-light);
+    }
+
+    .win-button img {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+
+    /* Menu bar */
+    .menu-bar {
+      display: flex;
+      background-color: var(--win-menu);
+      border-bottom: 1px solid var(--win-shadow-dark);
+    }
+
+    .menu-item {
+      padding: 4px 12px;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background-color: var(--win-highlight);
+      color: var(--win-highlight-text);
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      background-color: var(--win-bg);
+      border-top: 1px solid var(--win-shadow-light);
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    /* Marquee with enhanced style */
+    .win-marquee {
+      font-weight: bold;
+      background: var(--win-highlight);
+      color: var(--win-highlight-text);
+      padding: 6px;
+      font-size: 14px;
+      border: 1px inset var(--win-shadow-dark);
+    }
+    
+    /* Text animations */
+    .win-text-shadow {
+      text-shadow: 1px 1px 2px var(--win-shadow-dark);
+    }
+
+    .rainbow-text {
+      background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: rainbow 6s linear infinite;
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Blinking text effect */
+    .blink {
+      animation: blink-animation 1s steps(2, start) infinite;
+    }
+
+    @keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+
+    /* Animated underline */
+    .animated-underline {
+      position: relative;
+      display: inline-block;
+    }
+
+    .animated-underline::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--win-highlight);
+      transform: scaleX(0);
+      transform-origin: bottom right;
+      transition: transform 0.3s;
+    }
+
+    .animated-underline:hover::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+
+    /* Logo container with animated effects */
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo-container img {
+      height: 60px;
+      transition: transform 0.3s;
+    }
+
+    .logo-container img:hover {
+      transform: rotate(360deg);
+    }
+
+    /* Catalogue grid and cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .dish-card {
+      background: var(--win-window);
+      border: 2px solid var(--win-text);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light),
+                  2px 2px 5px rgba(0,0,0,0.2);
+      padding: 0;
+      text-align: center;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .dish-card:hover {
+      transform: translateY(-5px);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light),
+                  4px 8px 12px rgba(0,0,0,0.3);
+    }
+
+    .dish-card-header {
+      background: linear-gradient(90deg, var(--win-highlight) 0%, #0000A0 100%);
+      color: var(--win-highlight-text);
+      padding: 4px 8px;
+      font-weight: bold;
+      text-align: left;
+      display: flex;
+      align-items: center;
+    }
+
+    .dish-card-header img {
+      height: 16px;
+      margin-right: 5px;
+    }
+
+    .dish-card-content {
+      padding: 1rem;
+    }
+
+    .dish-card img.dish-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border: 1px solid var(--win-shadow-dark);
+      margin-bottom: 0.5rem;
+      transition: filter 0.3s;
+    }
+
+    .dish-card:hover img.dish-image {
+      filter: brightness(1.1);
+    }
+
+    .dish-card h3 {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+      color: var(--win-text);
+    }
+
+    .dish-card p {
+      font-size: 0.9rem;
+      color: var(--win-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .dish-card-footer {
+      background-color: var(--win-bg);
+      border-top: 1px solid var(--win-shadow-dark);
+      padding: 6px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Taskbar */
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background-color: var(--win-bg);
+      display: flex;
+      align-items: center;
+      border-top: 2px solid var(--win-shadow-light);
+      box-shadow: 0 -1px var(--win-shadow-dark);
+      z-index: 1000;
+    }
+
+    .start-button {
+      display: flex;
+      align-items: center;
+      background-color: var(--win-button);
+      border: 2px outset var(--win-shadow-light);
+      padding: 3px 8px;
+      margin: 0 2px;
+      height: 22px;
+      cursor: pointer;
+    }
+
+    .start-button img {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+    }
+
+    .start-button:active {
+      border-style: inset;
+    }
+
+    .taskbar-divider {
+      width: 1px;
+      height: 80%;
+      background-color: var(--win-shadow-dark);
+      margin: 0 4px;
+    }
+
+    .taskbar-time {
+      margin-left: auto;
+      padding: 0 8px;
+      border: 1px inset var(--win-shadow-dark);
+      height: 22px;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .filter-controls {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      nav {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .filter-controls {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <div class="start-button">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAC0SURBVDiNpZOxEcIwDEVfIAZIQUGbCTIBYQaGSJmCDajpKZmBATIBI9BSUMEQFBRxOB8hOTk+Fz1ZsmzZ/pISM1sAR2CjqvdsXgAwsxlwAZaqehljyIUTsGvrVHXbGwBOwKGDnlX13BvQwY/MrIhxchzJuQMQeFDVZZ/9AUyCc3gBfvcfcwAL4B73FbDOdQr2qnoNCTOrInwDNqrqnX8zs5Jwm8sYYx78DeEuG3WnuQG9giK84Q89xXzYMOu+ogAAAABJRU5ErkJggg==" alt="Start" />
+      <span>Start</span>
+    </div>
+    <div class="taskbar-divider"></div>
+    <div class="taskbar-time" id="taskbarTime">4:20 PM</div>
+  </div>
+
+  <!-- Main content wrapped in Windows-style window -->
+  <div class="window">
+    <div class="titlebar">
+      <div class="titlebar-text">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMiAyYy0xLjEgMC0yIC45LTIgMnYxMGMwIDEuMS45IDIgMiAyaDEyYzEuMSAwIDItLjkgMi0yVjRjMC0xLjEtLjktMi0yLTJIMnptMCAyaDEydjEwSDJWNHptMiAydjJoOFY2SDR6bTAgNHYyaDhWMTBINHoiLz48L3N2Zz4=" alt="Catalog Icon" />
+        <span>Shaan's Kitchen - Dish Catalogue</span>
+      </div>
+      <div class="titlebar-controls">
+        <div class="titlebar-button">_</div>
+        <div class="titlebar-button">□</div>
+        <div class="titlebar-button">×</div>
+      </div>
+    </div>
+
+    <div class="menu-bar">
+      <div class="menu-item">File</div>
+      <div class="menu-item">Edit</div>
+      <div class="menu-item">View</div>
+      <div class="menu-item">Help</div>
+    </div>
+
+    <div class="window-content">
+      <header>
+        <div class="logo-container">
+          <img src="assets/iraq.gif" alt="Iraq Flag">
+          <img src="assets/india.gif" alt="India Flag">
+        </div>
+        <h1 class="win-text-shadow">Shaan's Kitchen</h1>
+        <p class="animated-underline">Dish Catalogue</p>
+        <marquee class="win-marquee" behavior="scroll" direction="left">
+          Welcome to Shaan's Kitchen — <span class="rainbow-text">recipes, vibes, and memories</span> <span class="blink">NEW!</span>
+        </marquee>
+      </header>
+      
+      <nav>
+        <a href="index.html" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOCAxLjVsNyA3SDEydjZIOHYtNEg0djRIMFY4LjVMOCAxLjV6Ii8+PC9zdmc+" alt="Home icon" />
+          Home
+        </a>
+        <a href="catalogue.html" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMiAyYy0xLjEgMC0yIC45LTIgMnYxMGMwIDEuMS45IDIgMiAyaDEyYzEuMSAwIDItLjkgMi0yVjRjMC0xLjEtLjktMi0yLTJIMnptMCAyaDEydjEwSDJWNHptMiAydjJoOFY2SDR6bTAgNHYyaDhWMTBINHoiLz48L3N2Zz4=" alt="Catalogue icon" />
+          Catalogue
+        </a>
+        <a href="about.html" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOCAxQzQuMTM0IDEgMSA0LjEzNCAxIDhzMy4xMzQgNyA3IDcgNy0zLjEzNCA3LTctMy4xMzQtNy03LTd6bTAgMmMuNTUyIDAgMSAuNDQ4IDEgMXMtLjQ0OCAxLTEgMS0xLS40NDgtMS0xIC40NDgtMSAxLTF6bS0xIDNIOXY3SDd2LTd6Ii8+PC9zdmc+" alt="About icon" />
+          About the Chef
+        </a>
+      </nav>
+
+      <div class="music-player">
+        <button onclick="toggleMusic()" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOCAxQzQuMTM0IDEgMSA0LjEzNCAxIDhzMy4xMzQgNyA3IDcgNy0zLjEzNCA3LTctMy4xMzQtNy03LTd6bTIuNSA0LjVsLTYgMyAxLjUuNXYtM2wzIC0xLjUuNS41eiIvPjwvc3ZnPg==" alt="Music icon" />
+          Toggle Music
+        </button>
+        <audio id="themeAudio" loop>
+          <source src="assets/theme.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+
+      <div class="filter-controls">
+        <button class="win-button" onclick="filterDishes('all')">All Dishes</button>
+        <button class="win-button" onclick="filterDishes('1-4')">Party Size: 1-4</button>
+        <button class="win-button" onclick="filterDishes('1-20')">Party Size: 1-20</button>
+      </div>
+
+      <div class="grid">
+        <div class="dish-card" data-party-size="1-4">
+          <div class="dish-card-header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNCAxMlY0aDh2OEg0eiIvPjwvc3ZnPg==" alt="Food icon">
+            <span>Steak & Rigatoni</span>
+          </div>
+          <div class="dish-card-content">
+            <img src="assets/rigatoni.jpg" alt="Shaan's Steak & Rigatoni" class="dish-image">
+            <h3>Shaan's Steak & Rigatoni</h3>
+            <p>Party Size: 1–4</p>
+          </div>
+          <div class="dish-card-footer">
+            <button class="win-button" onclick="openDishDetails('rigatoni')">Details</button>
+          </div>
+        </div>
+        
+        <div class="dish-card" data-party-size="1-4">
+          <div class="dish-card-header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNCAxMlY0aDh2OEg0eiIvPjwvc3ZnPg==" alt="Food icon">
+            <span>Pepper Lunch</span>
+          </div>
+          <div class="dish-card-content">
+            <img src="assets/pepper-lunch.jpg" alt="Shaan's Pepper Lunch" class="dish-image">
+            <h3>Shaan's Pepper Lunch</h3>
+            <p>Party Size: 1–4</p>
+          </div>
+          <div class="dish-card-footer">
+            <button class="win-button" onclick="openDishDetails('pepper-lunch')">Details</button>
+          </div>
+        </div>
+        
+        <div class="dish-card" data-party-size="1-4">
+          <div class="dish-card-header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNCAxMlY0aDh2OEg0eiIvPjwvc3ZnPg==" alt="Food icon">
+            <span>Teriyaki Steak</span>
+          </div>
+          <div class="dish-card-content">
+            <img src="assets/teriyaki-steak.jpg" alt="Shaan's Teriyaki Steak & Cheese Corn Mash Potatoes" class="dish-image">
+            <h3>Shaan's Teriyaki Steak & Cheese Corn Mash Potatoes</h3>
+            <p>Party Size: 1–4</p>
+          </div>
+          <div class="dish-card-footer">
+            <button class="win-button" onclick="openDishDetails('teriyaki-steak')">Details</button>
+          </div>
+        </div>
+        
+        <div class="dish-card" data-party-size="1-20">
+          <div class="dish-card-header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNCAxMlY0aDh2OEg0eiIvPjwvc3ZnPg==" alt="Food icon">
+            <span>Chicken Sliders</span>
+          </div>
+          <div class="dish-card-content">
+            <img src="assets/sliders.jpg" alt="Shaan's Mock Chi-Tea Chicken Sliders" class="dish-image">
+            <h3>Shaan's Mock Chi-Tea Chicken Sliders</h3>
+            <p>Party Size: 1–20</p>
+          </div>
+          <div class="dish-card-footer">
+            <button class="win-button" onclick="openDishDetails('sliders')">Details</button>
+          </div>
+        </div>
+        
+        <div class="dish-card" data-party-size="1-20">
+          <div class="dish-card-header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNCAxMlY0aDh2OEg0eiIvPjwvc3ZnPg==" alt="Food icon">
+            <span>Steak Tacos</span>
+          </div>
+          <div class="dish-card-content">
+            <img src="assets/tacos.jpg" alt="Shaan's Steak Tacos" class="dish-image">
+            <h3>Shaan's Steak Tacos</h3>
+            <p>Party Size: 1–20</p>
+          </div>
+          <div class="dish-card-footer">
+            <button class="win-button" onclick="openDishDetails('tacos')">Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="status-bar">
+      <div>Ready</div>
+      <div>Items: <span id="itemCount">5</span></div>
+    </div>
+  </div>
+
+  <script>
+    // Audio functionality
+    const themeAudio = document.getElementById("themeAudio");
+    function toggleMusic() {
+      if (themeAudio.paused) {
+        themeAudio.play();
+      } else {
+        themeAudio.pause();
+      }
+    }
+
+    // Click sound effect
+    const clickSound = new Audio("assets/sounds/click.wav");
+    
+    // Add click sound to all buttons and links
+    document.querySelectorAll("a, .win-button, .titlebar-button").forEach(element => {
+      element.addEventListener("click", () => {
+        clickSound.play();
+      });
+    });
+
+    // Filter dishes by party size
+    function filterDishes(size) {
+      const cards = document.querySelectorAll('.dish-card');
+      let visibleCount = 0;
+      
+      cards.forEach(card => {
+        if (size === 'all' || card.getAttribute('data-party-size') === size) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      document.getElementById('itemCount').textContent = visibleCount;
+    }
+
+    // Open dish details
+    function openDishDetails(dish) {
+      // Show a Windows-style dialog with dish details
+      alert(`Dish details for ${dish} will be available soon!\n\nPlease check back in the next update of Shaan's Kitchen.`);
+    }
+
+    // Update taskbar time
+    function updateTaskbarTime() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      hours = hours % 12;
+      hours = hours ? hours : 12; // Convert 0 to 12
+      
+      const timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+      document.getElementById("taskbarTime").textContent = timeString;
+    }
+
+    // Update time every minute
+    setInterval(updateTaskbarTime, 60000);
+    updateTaskbarTime(); // Initial update
+
+    // Make windows draggable
+    function makeWindowDraggable(windowElement) {
+      const titlebar = windowElement.querySelector('.titlebar');
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      
+      if (titlebar) {
+        titlebar.onmousedown = dragMouseDown;
+      }
+
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Get initial mouse position
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Calculate new position
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // Set element's new position
+        windowElement.style.top = (windowElement.offsetTop - pos2) + "px";
+        windowElement.style.left = (windowElement.offsetLeft - pos1) + "px";
+        windowElement.style.position = "relative";
+      }
+
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    // Start menu functionality
+    document.querySelector('.start-button').addEventListener('click', function(e) {
+      // This would show a start menu in a full implementation
+      alert('Start menu is under construction!');
+    });
+
+    // Window initialization
+    window.addEventListener('DOMContentLoaded', (event) => {
+      // Make windows draggable
+      const windows = document.querySelectorAll('.window');
+      windows.forEach(makeWindowDraggable);
+      
+      // Add hover sound to dish cards
+      const dishCards = document.querySelectorAll('.dish-card');
+      dishCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          // Uncomment the line below if you have a hover sound
+          // new Audio("assets/sounds/hover.wav").play();
+        });
+      });
+    });

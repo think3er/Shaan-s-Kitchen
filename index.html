@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shaan's Kitchen</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    /* Windows 95/98 Color Palette */
+    :root {
+      --win-bg: #c0c0c0;
+      --win-text: #000000;
+      --win-highlight: #000080;
+      --win-highlight-text: #ffffff;
+      --win-button: #c0c0c0;
+      --win-window: #ffffff;
+      --win-shadow-dark: #808080;
+      --win-shadow-light: #ffffff;
+      --win-desktop: #008080;
+      --win-menu: #c0c0c0;
+    }
+
+    /* Custom scroll bar */
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--win-button);
+      border-left: 1px solid var(--win-shadow-dark);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--win-button);
+      border: 1px solid var(--win-text);
+      border-right: 1px solid var(--win-shadow-light);
+      border-bottom: 1px solid var(--win-shadow-light);
+    }
+
+    body {
+      background-color: var(--win-desktop);
+      font-family: 'MS Sans Serif', 'Microsoft Sans Serif', Tahoma, sans-serif;
+      padding: 2rem;
+      cursor: url('assets/cursor.cur'), auto;
+      color: var(--win-text);
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* Windows titlebar style */
+    .window {
+      border: 2px solid var(--win-text);
+      background-color: var(--win-bg);
+      margin-bottom: 1rem;
+      border-radius: 0;
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light),
+                  2px 2px 5px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .titlebar {
+      background: linear-gradient(90deg, var(--win-highlight) 0%, #0000A0 100%);
+      color: var(--win-highlight-text);
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .titlebar-text {
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+
+    .titlebar-text img {
+      height: 16px;
+      margin-right: 5px;
+    }
+
+    .titlebar-controls {
+      display: flex;
+    }
+
+    .titlebar-button {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      background-color: var(--win-button);
+      border: 1px solid var(--win-shadow-dark);
+      border-top-color: var(--win-shadow-light);
+      border-left-color: var(--win-shadow-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .window-content {
+      padding: 8px;
+      background-color: var(--win-window);
+      border-top: 1px solid var(--win-shadow-dark);
+    }
+
+    /* Navigation styling */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background-color: var(--win-bg);
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--win-shadow-dark);
+    }
+
+    .win-button {
+      text-decoration: none;
+      color: var(--win-text);
+      padding: 6px 12px;
+      background-color: var(--win-button);
+      border: 2px solid var(--win-text);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                 inset 1px 1px var(--win-shadow-light);
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: transform 0.05s;
+    }
+
+    .win-button:hover {
+      background-color: #d4d0c8;
+    }
+
+    .win-button:active {
+      transform: translateY(1px);
+      box-shadow: inset 1px 1px var(--win-shadow-dark),
+                 inset -1px -1px var(--win-shadow-light);
+    }
+
+    .win-button img {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+
+    /* Menu bar */
+    .menu-bar {
+      display: flex;
+      background-color: var(--win-menu);
+      border-bottom: 1px solid var(--win-shadow-dark);
+    }
+
+    .menu-item {
+      padding: 4px 12px;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background-color: var(--win-highlight);
+      color: var(--win-highlight-text);
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      background-color: var(--win-bg);
+      border-top: 1px solid var(--win-shadow-light);
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    /* Marquee with enhanced style */
+    .win-marquee {
+      font-weight: bold;
+      background: var(--win-highlight);
+      color: var(--win-highlight-text);
+      padding: 6px;
+      font-size: 14px;
+      border: 1px inset var(--win-shadow-dark);
+    }
+
+    /* Blinking text effect */
+    .blink {
+      animation: blink-animation 1s steps(2, start) infinite;
+    }
+
+    @keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+
+    /* Text animations */
+    .win-text-shadow {
+      text-shadow: 1px 1px 2px var(--win-shadow-dark);
+    }
+
+    .rainbow-text {
+      background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: rainbow 6s linear infinite;
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Animated underline */
+    .animated-underline {
+      position: relative;
+      display: inline-block;
+    }
+
+    .animated-underline::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--win-highlight);
+      transform: scaleX(0);
+      transform-origin: bottom right;
+      transition: transform 0.3s;
+    }
+
+    .animated-underline:hover::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+
+    /* Logo container with animated effects */
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo-container img {
+      height: 60px;
+      transition: transform 0.3s;
+    }
+
+    .logo-container img:hover {
+      transform: rotate(360deg);
+    }
+
+    /* Selection dropdown styling */
+    select {
+      appearance: none;
+      background-color: var(--win-window);
+      border: 2px solid var(--win-text);
+      box-shadow: inset -1px -1px var(--win-shadow-light), 
+                  inset 1px 1px var(--win-shadow-dark);
+      padding: 4px 24px 4px 8px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23000000" d="M3 4h6L6 8z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    /* Flip card enhancements */
+    .flip-card {
+      width: 300px;
+      height: 200px;
+      perspective: 1000px;
+      font-family: inherit;
+      margin: 0 auto;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border: 2px solid var(--win-text);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .flip-card-front {
+      background-color: var(--win-window);
+    }
+
+    .flip-card-back {
+      background-color: var(--win-bg);
+      transform: rotateY(180deg);
+    }
+
+    /* Typewriter effect */
+    .typewriter {
+      overflow: hidden;
+      border-right: 2px solid var(--win-text);
+      white-space: nowrap;
+      margin: 0 auto;
+      animation: 
+        typing 3.5s steps(30, end),
+        blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--win-text) }
+    }
+
+    /* Start button and taskbar */
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background-color: var(--win-bg);
+      display: flex;
+      align-items: center;
+      border-top: 2px solid var(--win-shadow-light);
+      box-shadow: 0 -1px var(--win-shadow-dark);
+      z-index: 1000;
+    }
+
+    .start-button {
+      display: flex;
+      align-items: center;
+      background-color: var(--win-button);
+      border: 2px outset var(--win-shadow-light);
+      padding: 3px 8px;
+      margin: 0 2px;
+      height: 22px;
+      cursor: pointer;
+    }
+
+    .start-button img {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+    }
+
+    .start-button:active {
+      border-style: inset;
+    }
+
+    .taskbar-divider {
+      width: 1px;
+      height: 80%;
+      background-color: var(--win-shadow-dark);
+      margin: 0 4px;
+    }
+
+    .taskbar-time {
+      margin-left: auto;
+      padding: 0 8px;
+      border: 1px inset var(--win-shadow-dark);
+      height: 22px;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    /* Windows error dialog */
+    .error-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--win-bg);
+      border: 2px solid var(--win-text);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light),
+                  2px 2px 10px rgba(0,0,0,0.3);
+      width: 300px;
+      z-index: 2000;
+      display: none;
+    }
+
+    .dialog-content {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .dialog-icon {
+      margin-right: 12px;
+    }
+
+    .dialog-buttons {
+      display: flex;
+      justify-content: center;
+      padding: 8px;
+      gap: 8px;
+    }
+
+    /* Loading animation */
+    .win-loader {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--win-shadow-dark);
+      border-top: 2px solid var(--win-highlight);
+      border-radius: 50%;
+      animation: win-spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes win-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Enhanced Fullscreen Image Viewer */
+    .fullscreen-img {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .fullscreen-img img {
+      max-width: 90%;
+      max-height: 90%;
+      border: 2px solid var(--win-bg);
+      box-shadow: inset -1px -1px var(--win-shadow-dark), 
+                  inset 1px 1px var(--win-shadow-light),
+                  4px 4px 10px rgba(0,0,0,0.5);
+    }
+
+    /* Media query for responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      nav {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .flip-card {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <div class="start-button">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAC0SURBVDiNpZOxEcIwDEVfIAZIQUGbCTIBYQaGSJmCDajpKZmBATIBI9BSUMEQFBRxOB8hOTk+Fz1ZsmzZ/pISM1sAR2CjqvdsXgAwsxlwAZaqehljyIUTsGvrVHXbGwBOwKGDnlX13BvQwY/MrIhxchzJuQMQeFDVZZ/9AUyCc3gBfvcfcwAL4B73FbDOdQr2qnoNCTOrInwDNqrqnX8zs5Jwm8sYYx78DeEuG3WnuQG9giK84Q89xXzYMOu+ogAAAABJRU5ErkJggg==" alt="Start" />
+      <span>Start</span>
+    </div>
+    <div class="taskbar-divider"></div>
+    <div class="taskbar-time" id="taskbarTime">4:20 PM</div>
+  </div>
+
+  <!-- Main content now wrapped in Windows-style windows -->
+  <div class="window">
+    <div class="titlebar">
+      <div class="titlebar-text">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTQgMkgyYy0xLjEgMC0yIC45LTIgMnYxMGMwIDEuMS45IDIgMiAyaDEyYzEuMSAwIDItLjkgMi0yVjRjMC0xLjEtLjktMi0yLTJ6bTAgMTJIMlY2aDEydjh6Ii8+PC9zdmc+" alt="Window Icon" />
+        <span>Shaan's Kitchen - Recipe Browser</span>
+      </div>
+      <div class="titlebar-controls">
+        <div class="titlebar-button">_</div>
+        <div class="titlebar-button">□</div>
+        <div class="titlebar-button">×</div>
+      </div>
+    </div>
+
+    <div class="menu-bar">
+      <div class="menu-item">File</div>
+      <div class="menu-item">Edit</div>
+      <div class="menu-item">View</div>
+      <div class="menu-item">Help</div>
+    </div>
+
+    <div class="window-content">
+      <header>
+        <div class="logo-container">
+          <img src="assets/iraq.gif" alt="Iraq Flag" />
+          <img src="assets/india.gif" alt="India Flag" />
+        </div>
+        <h1 class="win-text-shadow">Shaan's Kitchen</h1>
+        <p class="typewriter">What's for dinner tonight?</p>
+        <marquee class="win-marquee" behavior="scroll" direction="left">
+          Welcome to Shaan's Kitchen — <span class="rainbow-text">recipes, vibes, and memories</span> <span class="blink">NEW!</span>
+        </marquee>
+      </header>
+      
+      <nav>
+        <a href="index.html" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOCAxLjVsNyA3SDEydjZIOHYtNEg0djRIMFY4LjVMOCAxLjV6Ii8+PC9zdmc+" alt="Home icon" />
+          Home
+        </a>
+        <a href="catalogue.html" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMiAyYy0xLjEgMC0yIC45LTIgMnYxMGMwIDEuMS45IDIgMiAyaDEyYzEuMSAwIDItLjkgMi0yVjRjMC0xLjEtLjktMi0yLTJIMnptMCAyaDEydjEwSDJWNHptMiAydjJoOFY2SDR6bTAgNHYyaDhWMTBINHoiLz48L3N2Zz4=" alt="Catalogue icon" />
+          Catalogue
+        </a>
+        <a href="about.html" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOCAxQzQuMTM0IDEgMSA0LjEzNCAxIDhzMy4xMzQgNyA3IDcgNy0zLjEzNCA3LTctMy4xMzQtNy03LTd6bTAgMmMuNTUyIDAgMSAuNDQ4IDEgMXMtLjQ0OCAxLTEgMS0xLS40NDgtMS0xIC40NDgtMSAxLTF6bS0xIDNIOXY3SDd2LTd6Ii8+PC9zdmc+" alt="About icon" />
+          About the Chef
+        </a>
+      </nav>
+
+      <div class="music-player">
+        <button onclick="toggleMusic()" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNOCAxQzQuMTM0IDEgMSA0LjEzNCAxIDhzMy4xMzQgNyA3IDcgNy0zLjEzNCA3LTctMy4xMzQtNy03LTd6bTIuNSA0LjVsLTYgMyAxLjUuNXYtM2wzIC0xLjUuNS41eiIvPjwvc3ZnPg==" alt="Music icon" />
+          Toggle Music
+        </button>
+        <audio id="themeAudio" loop>
+          <source src="assets/theme.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+
+      <section class="suggestion-box">
+        <label for="partySize" class="animated-underline">How many people are you cooking for?</label><br />
+        <select id="partySize">
+          <option value="">Select</option>
+          <option value="1-4">1–4</option>
+          <option value="1-20">1–20</option>
+        </select>
+        <br />
+        <button onclick="suggestDish()" class="win-button">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMTAgM2MtMS41NiAwLTIuOTIuODI0LTMuNyAyLjA0QzUuNTggNC4yMiA0LjU2IDQgMy41IDRDMS41NyA0IDAgNS41NyAwIDcuNXMxLjU3IDMuNSAzLjUgMy41Yy41NjMgMCAxLjEtLjE0IDEuNTctLjM4Ni42LjM4NiAxLjMxLjYxIDIuMDcuNjEuNjYgMCAxLjI5LS4xNyAxLjg0LS40N0MxMC4zIDExLjQ5IDExLjM0IDEyIDEyLjUgMTJjMS45MyAwIDMuNS0xLjU3IDMuNS0zLjVTMTQuNDMgNSAxMi41IDVjLS41NiAwLTEuMDkuMTMtMS41Ni4zN0MxMC4zIDQuMTcgOS4yNiAzIDggM2gtMnoiLz48L3N2Zz4=" alt="Recipe icon" />
+          Suggest a Dish
+        </button>
+        <div id="loadingIndicator" class="win-loader" style="display: none;"></div>
+      </section>
+      
+      <div class="card-container" id="cardContainer"></div>
+      
+      <div class="fullscreen-img" id="fullscreenView" onclick="closeFullscreen()">
+        <img src="" id="fullscreenImg" alt="Fullscreen Dish View">
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <div>Ready</div>
+      <div>Items: <span id="itemCount">0</span></div>
+    </div>
+  </div>
+
+  <!-- Error dialog -->
+  <div class="error-dialog" id="errorDialog">
+    <div class="titlebar">
+      <div class="titlebar-text">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNOCAxQzQuMTM0IDEgMSA0LjEzNCAxIDhzMy4xMzQgNyA3IDcgNy0zLjEzNCA3LTctMy4xMzQtNy03LTd6bS0xIDNoMnY2SDd2LTZ6bTAgOGgydjJIN3YtMnoiLz48L3N2Zz4=" alt="Error Icon" />
+        <span>Windows Error</span>
+      </div>
+      <div class="titlebar-controls">
+        <div class="titlebar-button" onclick="hideErrorDialog()">×</div>
+      </div>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-icon">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBmaWxsPSJyZWQiIGQ9Ik0xNiAwQzcuMTY4IDAgMCA3LjE2OCAwIDE2czAuMTA4IDE2IDggMTZoMTZjNy44OTIgMCA4LTcuMTY4IDgtMTZTMjQuODMyIDAgMTYgMHpNMTYgNmMyLjIxIDAgNCAxLjc5IDQgNHMtMS43OSA0LTQgNC00LTEuNzktNC00IDEuNzktNCA0LTR6TTggMjhjLTIuMjEgMC00LTEuNzktNC00czEuNzktNCA0LTQgNCAxLjc5IDQgNC0xLjc5IDQtNCA0ek04IDhjLTIuMjEgMC00LTEuNzktNC00czEuNzktNCA0LTQgNCAxLjc5IDQgNC0xLjc5IDQtNCA0em0xNiAyMGMtMi4yMSAwLTQtMS43OS00LTRzMS43OS00IDQtNCA0IDEuNzkgNCA0LTEuNzkgNC00IDR6bTAtMTZjLTIuMjEgMC00LTEuNzktNC00czEuNzktNCA0LTQgNCAxLjc5IDQgNC0xLjc5IDQtNCA0eiIvPjwvc3ZnPg==" alt="Error" width="32" height="32">
+      </div>
+      <div class="dialog-text">
+        <p>An unexpected error has occurred! The computer is too hungry to continue.</p>
+      </div>
+    </div>
+    <div class="dialog-buttons">
+      <button class="win-button" onclick="hideErrorDialog()">OK</button>
+      <button class="win-button" onclick="hideErrorDialog()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio functionality
+    const themeAudio = document.getElementById("themeAudio");
+    function toggleMusic() {
+      if (themeAudio.paused) {
+        themeAudio.play();
+      } else {
+        themeAudio.pause();
+      }
+    }
+
+    // Dish suggestion functionality
+    const dishes = {
+      '1-4': [
+        { name: "Shaan's Steak & Rigatoni", image: "assets/rigatoni.jpg" },
+        { name: "Shaan's Pepper Lunch", image: "assets/pepper-lunch.jpg" },
+        { name: "Shaan's Teriyaki Steak & Cheese Corn Mash Potatoes", image: "assets/teriyaki-steak.jpg" }
+      ],
+      '1-20': [
+        { name: "Shaan's Mock Chi-Tea Chicken Sliders", image: "assets/sliders.jpg" },
+        { name: "Shaan's Steak Tacos", image: "assets/tacos.jpg" }
+      ]
+    };
+
+    function suggestDish() {
+      const size = document.getElementById("partySize").value;
+      const cardContainer = document.getElementById("cardContainer");
+      const loadingIndicator = document.getElementById("loadingIndicator");
+      
+      // Show loading animation
+      loadingIndicator.style.display = "block";
+      cardContainer.innerHTML = "";
+      
+      // Simulate Windows 95 loading time
+      setTimeout(() => {
+        loadingIndicator.style.display = "none";
+        
+        if (size && dishes[size]) {
+          const options = dishes[size];
+          const randomDish = options[Math.floor(Math.random() * options.length)];
+          
+          const card = document.createElement("div");
+          card.className = "flip-card";
+          card.innerHTML = `
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <strong class="win-text-shadow">${randomDish.name}</strong>
+                <p>Hover to see details</p>
+              </div>
+              <div class="flip-card-back">
+                <span>Click to View</span>
+                <div class="win-button" style="margin-top: 10px;" onclick="openFullscreen('${randomDish.image}')">View Recipe</div>
+              </div>
+            </div>`;
+          
+          cardContainer.appendChild(card);
+          
+          // Add explicit click handler to make sure it works
+          const backSide = card.querySelector('.flip-card-back');
+          backSide.addEventListener('click', function() {
+            openFullscreen(randomDish.image);
+          });
+          
+          // Update status bar
+          document.getElementById("itemCount").textContent = "1";
+          
+          // Random chance to show error dialog
+          if (Math.random() < 0.1) {
+            setTimeout(showErrorDialog, 500);
+          }
+        } else {
+          cardContainer.innerHTML = "<p>Please select a party size.</p>";
+          document.getElementById("itemCount").textContent = "0";
+        }
+      }, 800);
+    }
+
+    // Fixed fullscreen image viewer functions
+    function openFullscreen(src) {
+      const viewer = document.getElementById("fullscreenView");
+      const img = document.getElementById("fullscreenImg");
+      img.src = src;
+      viewer.style.display = "flex";
+    }
+
+    function closeFullscreen() {
+      document.getElementById("fullscreenView").style.display = "none";
+    }
+
+    // Error dialog functionality
+    function showErrorDialog() {
+      document.getElementById("errorDialog").style.display = "block";
+    }
+
+    function hideErrorDialog() {
+      document.getElementById("errorDialog").style.display = "none";
+    }
+
+    // Click sound effect
+    const clickSound = new Audio("assets/sounds/click.mp3");
+    
+    // Add click sound to all buttons and links
+    document.querySelectorAll("a, .win-button, .titlebar-button").forEach(element => {
+      element.addEventListener("click", () => {
+        clickSound.play();
+      });
+    });
+
+    // Update taskbar time
+    function updateTaskbarTime() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      hours = hours % 12;
+      hours = hours ? hours : 12; // Convert 0 to 12
+      
+      const timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+      document.getElementById("taskbarTime").textContent = timeString;
+    }
+
+    // Update time every minute
+    setInterval(updateTaskbarTime, 60000);
+    updateTaskbarTime(); // Initial update
+
+    // Windows startup sound
+    window.addEventListener('DOMContentLoaded', (event) => {
+      // Uncomment the line below if you have a startup sound
+      // new Audio("assets/sounds/startup.mp3").play();
+      
+      // Add drag functionality to window
+      const windows = document.querySelectorAll('.window');
+      windows.forEach(makeWindowDraggable);
+    });
+
+    // Make windows draggable
+    function makeWindowDraggable(windowElement) {
+      const titlebar = windowElement.querySelector('.titlebar');
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      
+      if (titlebar) {
+        titlebar.onmousedown = dragMouseDown;
+      }
+
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Get initial mouse position
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Calculate new position
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // Set element's new position
+        windowElement.style.top = (windowElement.offsetTop - pos2) + "px";
+        windowElement.style.left = (windowElement.offsetLeft - pos1) + "px";
+        windowElement.style.position = "relative";
+      }
+
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    // Start menu functionality
+    document.querySelector('.start-button').addEventListener('click', function(e) {
+      // This would show a start menu in a full implementation
+      alert('Start menu is under construction!');
+    });
+
+    // Double-click functionality
+    let clickCount = 0;
+    let clickTimer = null;
+    
+    document.addEventListener('click', function(e) {
+      clickCount++;
+      
+      if (clickCount === 1) {
+        clickTimer = setTimeout(function() {
+          clickCount = 0;
+        }, 400);
+      } else if (clickCount === 2) {
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        // Double click action
+        if (e.target.classList.contains('window-content') || e.target.tagName === 'BODY') {
+          const randomFacts = [
+            "Windows 95 was released on August 24, 1995!",
+            "The startup sound for Windows 95 was composed by Brian Eno!",
+            "Shaan's Kitchen is now loading... Please wait...",
+            "Insert Disk 2 to continue installation...",
+            "SHAAN.EXE has performed an illegal operation!"
+          ];
+          alert(randomFacts[Math.floor(Math.random() * randomFacts.length)]);
+        }
+      }
+    });
+
+    // Easter egg: Konami code
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          document.body.style.backgroundImage = "url('assets/stars.gif')";
+          alert("You've unlocked the secret chef mode!");
+          konamiIndex = 0;
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    });
+  </script>
+</body>
+</html>
